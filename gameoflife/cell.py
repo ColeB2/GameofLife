@@ -10,14 +10,11 @@ class Cell:
     def __init__(self, rect, state=0):
         self.rect = pygame.Rect(rect)
         self.state = state
+        self.prev_state = None
 
         self.color = GRAY
 
 
-        self.clicked = False
-        self.hovered = True
-        self.hover_color = (LIGHT_GREEN)
-        self.run_on_release = False
 
 
     def __str__(self):
@@ -29,41 +26,23 @@ class Cell:
     def get_event(self, event, *args):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             self._handle_click(*args)
-        elif event.type == pygame.MOUSEBUTTONUP and event.button ==1:
-            self._handle_release(*args)
+
+
+    def change_state(self):
+        if self.state == 1:
+            self.state = 0
+        else:
+            self.state = 1
+
 
 
     """Internal Methods"""
     def _handle_click(self, *args):
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.clicked = True
-
-
-    def _handle_release(self, *args):
-        """Unused for now"""
-        if self.clicked and self.run_on_release:
-            pass
-        self.clicked = False
-
-
-    def _handle_hover(self):
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            if self.hovered == False:
-                self.hovered = True
-        else:
-            self.hovered = False
+            self.state = 1
 
 
     def update(self, surface, *args):
-        self._handle_hover()
-
-        if self.clicked:
-            color = self.hover_color
-        elif self.hovered:
-            color = self.hover_color
-
-
-
         if self.state == 1:
             self.color = BLACK
         elif self.state == 0:
@@ -78,20 +57,28 @@ class Cell:
 
 if __name__ == '__main__':
     pygame.init()
-    surface = pygame.display.set_mode((600,600))
+    WIDTH = 600
+    surface = pygame.display.set_mode((WIDTH, WIDTH))
     surface.fill((BG_COLOR))
-    pygame.display.set_caption("Tic Tac Toe Cell")
+    pygame.display.set_caption("Conway's Game of Life Cell")
 
     """Create the Cells"""
-    cell1 = Cell(rect=(100,100,100,100), state=0)
-    cell2 = Cell(rect=(200,100,100,100), state=0)
-    cell3 = Cell(rect=(100,200,100,100), state=0)
-    cell4 = Cell(rect=(200,200,100,100), state=0)
-    cells = [cell1, cell2, cell3, cell4]
+
     cells = []
     for i in range(10):
+        row = []
         for j in range(10):
-            cells.append(Cell(rect=(100+i*30,100+j*30,28,28), state=0))
+            row.append(Cell(rect=(100+i*30,100+j*30,28,28), state=0))
+        cells.append(row)
+
+    def clickChange(pos, state):
+        i = (pos[0] - 100) // 30
+        j = (pos[1] - 100)// 30
+        print(f"i:{i}----j:{j}----pos:{pos}")
+        if i >=0 and i <= 9  and j >=0 and j <=9:
+            print('yes')
+            cells[i][j].change_state()
+
 
     print(cells)
     """More Pygame Loop"""
@@ -102,17 +89,25 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 run = False
 
+            if event.type == pygame.MOUSEBUTTONUP:
+                if pygame.mouse.get_pressed():
+                    clickChange(pygame.mouse.get_pos(), 1)
+                if pygame.mouse.get_pressed():
+                    clickChange(pygame.mouse.get_pos(), 0)
+            if event.type == pygame.MOUSEMOTION:
+                if pygame.mouse.get_pressed()[0]:
+                    clickChange(pygame.mouse.get_pos(), 1)
+
+
 
             """Call get_event for all cells, --> Board method"""
-            for cell in cells:
-                cell.get_event(event)
-                """Handle click function stuff"""
-                if cell.clicked == True and cell.state == 0:
-                    cell.state = 1
-                elif cell.clicked == True and cell.state == 1:
-                    cell.state = 0
+            # for row in cells:
+            #     for cell in row:
+            #         cell.get_event(event)
+
 
         surface.fill((BG_COLOR))
-        for CELL in cells:
-            CELL.update(surface)
+        for row in cells:
+            for cell in row:
+                cell.update(surface)
         pygame.display.update()
