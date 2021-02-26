@@ -11,9 +11,7 @@ class Cell:
         self.rect = pygame.Rect(rect)
         self.state = state
         self.prev_state = None
-
         self.color = GRAY
-
 
 
 
@@ -22,24 +20,13 @@ class Cell:
 
 
 
-    """Event Handler"""
-    def get_event(self, event, *args):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            self._handle_click(*args)
-
-
     def change_state(self):
         if self.state == 1:
             self.state = 0
+            self.prev_state = 1
         else:
             self.state = 1
-
-
-
-    """Internal Methods"""
-    def _handle_click(self, *args):
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.state = 1
+            self.prev_state = 0
 
 
     def update(self, surface, *args):
@@ -47,7 +34,6 @@ class Cell:
             self.color = BLACK
         elif self.state == 0:
             self.color = GRAY
-
 
         pygame.draw.rect(surface, self.color, self.rect, width=0)
 
@@ -71,12 +57,14 @@ if __name__ == '__main__':
             row.append(Cell(rect=(100+i*30,100+j*30,28,28), state=0))
         cells.append(row)
 
-    def clickChange(pos, state):
+    def clickChange(pos):
+        """Mouse control option:
+        Controls state of cell by first finding the i,j value of the cell. Then
+        calling the change state method on said cell if called. """
         i = (pos[0] - 100) // 30
         j = (pos[1] - 100)// 30
         print(f"i:{i}----j:{j}----pos:{pos}")
         if i >=0 and i <= 9  and j >=0 and j <=9:
-            print('yes')
             cells[i][j].change_state()
 
 
@@ -89,21 +77,12 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 run = False
 
-            if event.type == pygame.MOUSEBUTTONUP:
-                if pygame.mouse.get_pressed():
-                    clickChange(pygame.mouse.get_pos(), 1)
-                if pygame.mouse.get_pressed():
-                    clickChange(pygame.mouse.get_pos(), 0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed()[0]:
+                    clickChange(pygame.mouse.get_pos())
             if event.type == pygame.MOUSEMOTION:
                 if pygame.mouse.get_pressed()[0]:
-                    clickChange(pygame.mouse.get_pos(), 1)
-
-
-
-            """Call get_event for all cells, --> Board method"""
-            # for row in cells:
-            #     for cell in row:
-            #         cell.get_event(event)
+                    clickChange(pygame.mouse.get_pos())
 
 
         surface.fill((BG_COLOR))
