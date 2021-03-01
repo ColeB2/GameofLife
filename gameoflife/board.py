@@ -17,9 +17,9 @@ class Board:
 
 
     def print_board(self):
-        print(self.board)
-        # for i in range(len(self.board)):
-            # print(self.board[i])
+        for i in range(len(self.board)):
+            print(self.board[i])
+        print()
 
 
 
@@ -101,7 +101,7 @@ if __name__ == "__main__":
         calling the change state method on said cell if called. """
         i, j = get_cell(pos)
         if collision_check(i,j):
-            B.board[i][j].change_state()
+            B.board[i][j].draw_state()
 
     last_cell_change = None
     def motionChange(pos):
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         i, j = get_cell(pos)
         # print(f"i:{i}----j:{j}----pos:{pos}")
         if collision_check(i,j) == True and last_cell_change != B.board[i][j]:
-            B.board[i][j].change_state()
+            B.board[i][j].draw_state()
             last_cell_change = B.board[i][j]
 
     run = True
@@ -137,6 +137,7 @@ if __name__ == "__main__":
         BB.update(surface)
         if UPDATE:
             B.next_state()
-            pygame.time.wait(100)
-        # B.print_board()
+            B.print_board()
+            pygame.time.wait(300)
+
         pygame.display.update()

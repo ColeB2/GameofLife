@@ -68,14 +68,14 @@ class Cell:
                 self.alive_neighbours += 1
 
 
-    def change_state(self):
+    def draw_state(self):
         """Used for drawing purposes"""
         if self.state == 1:
             self.state = 0
-            self.prev_state = 1
+            self.prev_state = 0
         elif self.state == 0:
             self.state = 1
-            self.prev_state = 0
+            self.prev_state = 1
 
 
     def calculate_state(self):
@@ -83,6 +83,7 @@ class Cell:
         self.check_neighbour_state()
         if self.state == 1:
             if self.alive_neighbours in [2,3]:
+                self.state = 1
                 self.prev_state = 1
             else:
                 self.state = 0
@@ -92,8 +93,8 @@ class Cell:
                 self.state = 1
                 self.prev_state = 0
             else:
+                self.state = 0
                 self.prev_state = 0
-
 
 
     def update(self, surface, *args):
@@ -142,7 +143,7 @@ if __name__ == '__main__':
         calling the change state method on said cell if called. """
         i, j = get_cell(pos)
         if collision_check(i,j):
-            cells[i][j].change_state()
+            cells[i][j].draw_state()
 
     last_cell_change = None
     def motionChange(pos):
@@ -150,7 +151,7 @@ if __name__ == '__main__':
         i, j = get_cell(pos)
         # print(f"i:{i}----j:{j}----pos:{pos}")
         if collision_check(i,j) == True and last_cell_change != cells[i][j]:
-            cells[i][j].change_state()
+            cells[i][j].draw_state()
             last_cell_change = cells[i][j]
 
 
