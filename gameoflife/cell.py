@@ -84,17 +84,13 @@ class Cell:
         if self.state == 1:
             if self.alive_neighbours in [2,3]:
                 self.state = 1
-                self.prev_state = 1
             else:
                 self.state = 0
-                self.prev_state = 1
         elif self.state == 0:
             if self.alive_neighbours == 3:
                 self.state = 1
-                self.prev_state = 0
             else:
                 self.state = 0
-                self.prev_state = 0
 
 
     def update(self, surface, *args):

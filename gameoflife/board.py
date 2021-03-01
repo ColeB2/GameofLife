@@ -38,6 +38,14 @@ class Board:
                 cell.prev_state = cell.state
 
 
+    def set_cell_prev_state(self):
+        """Sets the all the cell's in the board prev_state attribute to be the
+        value of all current state values."""
+        for row in range(len(self.board)):
+            for cell in self.board[row]:
+                cell.prev_state = cell.state
+
+
 
 
     def create_board(self):
@@ -76,6 +84,7 @@ class Board:
         for row in range(len(self.board)):
             for cell in self.board[row]:
                 cell.calculate_state()
+        self.reset_state()
 
 
 
