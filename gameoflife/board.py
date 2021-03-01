@@ -84,7 +84,7 @@ class Board:
         for row in range(len(self.board)):
             for cell in self.board[row]:
                 cell.calculate_state()
-        self.reset_state()
+        self.set_cell_prev_state()
 
 
 
