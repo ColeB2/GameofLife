@@ -6,28 +6,94 @@ from pyVariables import *
 class Cell:
     """
     A class to represent a single cell, created using pygame.Rect object,
-        designed for use in Conway's Game of Life program.
+    designed for use in Conway's Game of Life program.
     """
-    def __init__(self, rect, state=0):
-        self.rect = pygame.Rect(rect)
+    def __init__(self, x, y, state=0):
+        self.x = x
+        self.y = y
         self.state = state
-        self.prev_state = None
-        self.color = GRAY
+
+        self.prev_state = state
+        self.rect = pygame.Rect(TOP_LEFT_X+self.x*CELL_WIDTH,
+                                TOP_LEFT_Y+self.y*CELL_WIDTH,
+                                CELL_WIDTH-2,
+                                CELL_WIDTH-2)
+
+
+        self.neighbours = []
+        self.alive_neighbours = 0
 
 
 
     def __str__(self):
-        return f"Cell Rect: {self.rect} Cell State: {self.state}"
+        return f"Cell x: {self.x} Cell y: {self.y} Cell State: {self.state}"
 
+
+    def __repr__(self):
+        return f"{self.x},{self.y}:{self.state}"
+
+
+
+
+
+
+    def get_neighbours(self, neighbourhood, neighbours=[-1,0,1]):
+        """
+        Gets all neighbouring cells and adds them to the list of neighbours
+        """
+        neighbour_check = True
+        for j in neighbours:
+            for i in neighbours:
+                neighbour_check = True
+                if i == 0 and j == 0:
+                    # Can't be neighbours with self
+                    neighbour_check = False
+                elif self.x + i < 0 or self.y + j < 0:
+                    #Can't be neighbours with cells off the board/ other side
+                    neighbour_check = False
+                elif self.x + i > len(neighbourhood)-1 or self.y + j > len(neighbourhood[0])-1:
+                    #Can't neighbours with cells that don't exists/ off the board
+                    neighbour_check = False
+
+                if neighbour_check:
+                    self.neighbours.append(neighbourhood[self.x + i][self.y + j])
+        print(f"Current Cell: {self.x},{self.y}: {self.state} Neighbours: {self.neighbours}")
+
+
+    def check_neighbour_state(self):
+        """Checks the state of all neighbouring cells"""
+        self.alive_neighbours = 0
+        for cell in self.neighbours:
+            if cell.prev_state == 1:
+                self.alive_neighbours += 1
 
 
     def change_state(self):
+        """Used for drawing purposes"""
         if self.state == 1:
             self.state = 0
             self.prev_state = 1
-        else:
+        elif self.state == 0:
             self.state = 1
             self.prev_state = 0
+
+
+    def calculate_state(self):
+        """Alive - Calc State"""
+        self.check_neighbour_state()
+        if self.state == 1:
+            if self.alive_neighbours in [2,3]:
+                self.prev_state = 1
+            else:
+                self.state = 0
+                self.prev_state = 1
+        elif self.state == 0:
+            if self.alive_neighbours == 3:
+                self.state = 1
+                self.prev_state = 0
+            else:
+                self.prev_state = 0
+
 
 
     def update(self, surface, *args):
@@ -35,6 +101,7 @@ class Cell:
             self.color = BLACK
         elif self.state == 0:
             self.color = GRAY
+
 
         pygame.draw.rect(surface, self.color, self.rect, width=0)
 
@@ -51,20 +118,20 @@ if __name__ == '__main__':
     """Create the Cells"""
 
     cells = []
-    for i in range(10):
+    for i in range(BOARD_WIDTH):
         row = []
-        for j in range(10):
-            row.append(Cell(rect=(100+i*30,100+j*30,28,28), state=0))
+        for j in range(BOARD_HEIGHT):
+            row.append(Cell(i,j, state=0))
         cells.append(row)
 
 
     def get_cell(pos):
-        i = (pos[0] - 100) // 30
-        j = (pos[1] - 100) // 30
+        i = (pos[0] - TOP_LEFT_X) // CELL_WIDTH
+        j = (pos[1] - TOP_LEFT_Y) // CELL_WIDTH
         return i, j
 
     def collision_check(i,j):
-        if i >=0 and i <= 9  and j >=0 and j <=9:
+        if i >=0 and i <= BOARD_WIDTH-1  and j >=0 and j <=BOARD_HEIGHT-1:
             return True
         return False
 
@@ -81,7 +148,7 @@ if __name__ == '__main__':
     def motionChange(pos):
         global last_cell_change
         i, j = get_cell(pos)
-        print(f"i:{i}----j:{j}----pos:{pos}")
+        # print(f"i:{i}----j:{j}----pos:{pos}")
         if collision_check(i,j) == True and last_cell_change != cells[i][j]:
             cells[i][j].change_state()
             last_cell_change = cells[i][j]
