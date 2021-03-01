@@ -1,5 +1,6 @@
 from pyVariables import *
 from cell import Cell
+import random
 
 
 class Board:
@@ -20,6 +21,14 @@ class Board:
         for i in range(len(self.board)):
             print(self.board[i])
         print()
+
+
+    def random_state(self):
+        for row in range(len(self.board)):
+            for cell in self.board[row]:
+                cell.state = random.randint(0,1)
+                cell.prev_state = cell.state
+
 
 
 
