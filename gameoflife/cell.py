@@ -54,7 +54,6 @@ class Cell:
 
                 if neighbour_check:
                     self.neighbours.append(neighbourhood[self.x + i][self.y + j])
-        print(f"Current Cell: {self.x},{self.y}: {self.state} Neighbours: {self.neighbours}")
 
 
     def check_neighbour_state(self):

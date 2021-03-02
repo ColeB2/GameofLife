@@ -133,7 +133,6 @@ if __name__ == "__main__":
     def motionChange(pos):
         global last_cell_change
         i, j = get_cell(pos)
-        # print(f"i:{i}----j:{j}----pos:{pos}")
         if collision_check(i,j) == True and last_cell_change != B.board[i][j]:
             B.board[i][j].draw_state()
             last_cell_change = B.board[i][j]
