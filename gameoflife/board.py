@@ -13,6 +13,7 @@ class Board:
         self.width = width #row
         self.height = height #col
         self.board = []
+        self.generation = 0
         self.create_board()
         self.set_cell_neighbours()
 
@@ -63,6 +64,7 @@ class Board:
         for row in range(len(self.board)):
             for cell in self.board[row]:
                 cell.state = 0
+        self.generation = 0
 
 
     def set_cell_neighbours(self):
@@ -83,6 +85,17 @@ class Board:
             for cell in self.board[row]:
                 cell.calculate_state()
         self.set_cell_prev_state()
+        self.generation += 1
+
+
+    def cell_update(self, surface, *args):
+        for row in self.board:
+            for cell in row:
+                cell.update(surface, *args)
+
+
+    def update(self, surface):
+        self.cell_update(surface)
 
 
 
@@ -155,10 +168,8 @@ if __name__ == "__main__":
 
 
         surface.fill((BG_COLOR))
-        for row in B.board:
-            for cell in row:
-                cell.update(surface)
 
+        B.update(surface)
         BB.update(surface)
         if UPDATE:
             B.next_state()
