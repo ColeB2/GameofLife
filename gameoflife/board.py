@@ -14,8 +14,8 @@ class Board:
         self.height = height #col
         self.board = []
         self.create_board()
-        print(self.board)
         self.set_cell_neighbours()
+
 
 
     def print_board(self):
@@ -47,7 +47,6 @@ class Board:
 
 
 
-
     def create_board(self):
         for i in range(self.width):
             row = []
@@ -74,7 +73,6 @@ class Board:
                 cell.get_neighbours(self.board)
 
 
-
     def next_state(self):
         """
         Calculates the next state the board should be in. Does so by
@@ -85,6 +83,8 @@ class Board:
             for cell in self.board[row]:
                 cell.calculate_state()
         self.set_cell_prev_state()
+
+
 
 
 

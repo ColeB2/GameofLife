@@ -34,9 +34,6 @@ class Cell:
 
 
 
-
-
-
     def get_neighbours(self, neighbourhood, neighbours=[-1,0,1]):
         """
         Gets all neighbouring cells and adds them to the list of neighbours
