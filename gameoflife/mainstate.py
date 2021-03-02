@@ -1,5 +1,6 @@
 from pyVariables import *
 from board import Board
+from menu import Menu
 import pygame
 
 
@@ -9,7 +10,29 @@ class MainState:
         self.B = Board(width=BOARD_WIDTH, height=BOARD_HEIGHT)
 
         self.run = True
+        self.run_game = False
         self.last_cell_change = None
+        self.M = Menu()
+        self.M.create_play_button(function=self.play_button_function)
+        self.M.create_pause_button(function=self.pause_button_function)
+        self.M.create_reset_button(function=self.reset_button_function)
+        self.M.create_exploder_sm_button()
+        self.M.create_exploder_button()
+        self.M.create_toad_button()
+        self.M.create_row_button()
+        self.M.create_random_button()
+
+
+    def play_button_function(self):
+        self.run_game = True
+
+    def pause_button_function(self):
+        self.run_game = False
+
+
+    def reset_button_function(self):
+        self.B.dead_state()
+
 
 
 
@@ -60,14 +83,19 @@ class MainState:
                 if pygame.mouse.get_pressed()[0]:
                     self.motion_change(pygame.mouse.get_pos())
 
+            self.M.get_event(event)
+
 
     def update(self, surface):
         self.B.update(surface)
+        self.M.update(surface)
 
 
     def main_loop(self, surface):
         self.event_loop()
         self.update(surface)
+        if self.run_game:
+            self.B.next_state()
 
 
 
@@ -77,3 +105,9 @@ if __name__ == "__main__":
     surface = pygame.display.set_mode((DIS_X, DIS_Y))
     surface.fill((BG_COLOR))
     pygame.display.set_caption("Conway's Game of Life mainstate")
+
+    game = MainState()
+    while game.run:
+        surface.fill(BG_COLOR)
+        game.main_loop(surface)
+        pygame.display.update()

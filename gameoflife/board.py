@@ -32,13 +32,6 @@ class Board:
                 cell.prev_state = cell.state
 
 
-    def dead_state(self):
-        for row in range(len(self.board)):
-            for cell in self.board[row]:
-                cell.state = 0
-                cell.prev_state = cell.state
-
-
     def set_cell_prev_state(self):
         """Sets the all the cell's in the board prev_state attribute to be the
         value of all current state values."""
@@ -52,18 +45,18 @@ class Board:
         for i in range(self.width):
             row = []
             for j in range(self.height):
-                row.append(Cell(x=i,
-                                y=j,
-                                state=0))
+                cell = Cell(x=i, y=j, state=0)
+                row.append(cell)
             self.board.append(row)
 
 
     def dead_state(self):
         """Kills all cells in the board, does so by iterating through all cells
         and changing their state to 0."""
-        for row in range(len(self.board)):
-            for cell in self.board[row]:
+        for row in self.board:
+            for cell in row:
                 cell.state = 0
+                cell.prev_state = 0
         self.generation = 0
 
 
