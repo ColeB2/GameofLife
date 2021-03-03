@@ -8,6 +8,9 @@ import pygame
 class Menu:
     def __init__(self):
         self.buttons = []
+        self.menu_font = pygame.font.SysFont(None, 50)
+        self.render_static_text()
+
 
 
     def create_buttons(self, rect, button_text, function, function_args=None):
@@ -18,6 +21,23 @@ class Menu:
         )
 
 
+    def render_static_text(self):
+        self.text = self.menu_font.render("Generations: ", True, BLACK, BG_COLOR)
+
+
+    def render_generations_text(self):
+        self.gen_text = self.menu_font.render(str(self.generations), True, BLACK)
+
+
+    def blit_text(self, surface):
+        surface.blit(self.text, (0,670))
+        surface.blit(self.gen_text, (220,670))
+
+
+    def get_generations(self, generations):
+        self.generations = generations
+        self.render_generations_text()
+
 
 
     def get_event(self, event):
@@ -25,10 +45,11 @@ class Menu:
             btn_dict["button"].get_event(event, btn_dict["function_args"])
 
 
-
-    def update(self, surface):
+    def update(self, surface, **kwargs):
         for btn_dict in self.buttons:
             btn_dict["button"].update(surface)
+        self.get_generations(kwargs["generations"])
+        self.blit_text(surface)
 
 
 
@@ -40,14 +61,6 @@ if __name__ == "__main__":
     pygame.display.set_caption("Game of Life")
 
     M = Menu()
-    M.create_play_button()
-    M.create_pause_button()
-    M.create_reset_button()
-    M.create_exploder_sm_button()
-    M.create_exploder_button()
-    M.create_toad_button()
-    M.create_row_button()
-    M.create_random_button()
 
 
 

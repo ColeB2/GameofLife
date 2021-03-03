@@ -123,7 +123,7 @@ class MainState:
 
     def update(self, surface):
         self.B.update(surface)
-        self.M.update(surface)
+        self.M.update(surface, generations=self.B.generation)
 
 
     def main_loop(self, surface):
