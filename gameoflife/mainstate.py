@@ -13,27 +13,62 @@ class MainState:
         self.run_game = False
         self.last_cell_change = None
         self.M = Menu()
-        self.M.create_play_button(function=self.play_button_function)
-        self.M.create_pause_button(function=self.pause_button_function)
-        self.M.create_reset_button(function=self.reset_button_function)
-        self.M.create_exploder_sm_button()
-        self.M.create_exploder_button()
-        self.M.create_toad_button()
-        self.M.create_row_button()
-        self.M.create_random_button()
+        self.button_info = [
+            {"rect":(0,0,90,45),
+              "text":"Play",
+              "function": self.play_button_function,
+              "function_args": None},
+            {"rect":(90,0,90,45),
+              "text":"Pause",
+              "function": self.pause_button_function,
+              "function_args": None},
+            {"rect":(180,0,90,45),
+              "text":"Clear",
+              "function": self.reset_button_function,
+              "function_args": None},
+            {"rect":(550,0,90,45),
+              "text":"Exploder",
+              "function": self.B.load_state,
+              "function_args": "exploder.txt"},
+            {"rect":(640,0,90,45),
+              "text":"SmallExp.",
+              "function": self.B.load_state,
+              "function_args": "explodersmall.txt"},
+            {"rect":(730,0,90,45),
+              "text":"Toad",
+              "function": self.B.load_state,
+              "function_args": "toad.txt"},
+            {"rect":(820,0,90,45),
+              "text":"Row",
+              "function": self.B.load_state,
+              "function_args": "row10cell.txt"},
+            {"rect":(910,0,90,45),
+              "text":"Random",
+              "function": self.B.random_state,
+              "function_args": None},
+        ]
+        self.create_buttons()
+
+    def create_buttons(self):
+        for button in self.button_info:
+            self.M.create_buttons(
+                                  button["rect"],
+                                  button["text"],
+                                  button["function"],
+                                  button["function_args"])
 
 
-    def play_button_function(self):
+
+    def play_button_function(self, *args):
         self.run_game = True
 
-    def pause_button_function(self):
+
+    def pause_button_function(self, *args):
         self.run_game = False
 
 
-    def reset_button_function(self):
+    def reset_button_function(self, *args):
         self.B.dead_state()
-
-
 
 
     def get_cell(self, pos):

@@ -7,71 +7,28 @@ import pygame
 
 class Menu:
     def __init__(self):
-        pass
+        self.buttons = []
 
 
-    def create_play_button(self, function=None):
-        self.play_button = Button((0,0,90,45),
-            function, hover_color=PURPLE2, text="Play")
+    def create_buttons(self, rect, button_text, function, function_args=None):
+        button = Button((rect), function, hover_color=PURPLE2, text=button_text)
+        self.buttons.append(
+            {"button": button,
+             "function_args":function_args}
+        )
 
-
-    def create_pause_button(self, function=None):
-        self.pause_button = Button((90,0,90,45),
-            function, hover_color=PURPLE2, text="Pause")
-
-
-    def create_reset_button(self, function=None):
-        self.reset_button = Button((180,0,90,45),
-            function, hover_color=PURPLE2, text="Clear")
-
-
-    def create_exploder_sm_button(self, function=None):
-        self.exploder_sm_button = Button((360,0,90,45),
-            function, hover_color=PURPLE2, text="ExpSmall")
-
-
-    def create_exploder_button(self, function=None):
-        self.exploder_button = Button((450,0,90,45),
-            function, hover_color=PURPLE2, text="Exploder")
-
-
-    def create_toad_button(self, function=None):
-        self.toad_button = Button((540,0,90,45),
-            function, hover_color=PURPLE2, text="Toad")
-
-
-    def create_row_button(self, function=None):
-        self.row_button = Button((630,0,90,45),
-            function, hover_color=PURPLE2, text="Row")
-
-
-    def create_random_button(self, function=None):
-        self.random_button = Button((720,0,90,45),
-            function, hover_color=PURPLE2, text="Random")
 
 
 
     def get_event(self, event):
-        self.play_button.get_event(event)
-        self.pause_button.get_event(event)
-        self.reset_button.get_event(event)
-        self.exploder_sm_button.get_event(event)
-        self.exploder_button.get_event(event)
-        self.toad_button.get_event(event)
-        self.row_button.get_event(event)
-        self.random_button.get_event(event)
+        for btn_dict in self.buttons:
+            btn_dict["button"].get_event(event, btn_dict["function_args"])
 
 
 
     def update(self, surface):
-        self.play_button.update(surface)
-        self.pause_button.update(surface)
-        self.reset_button.update(surface)
-        self.exploder_sm_button.update(surface)
-        self.exploder_button.update(surface)
-        self.toad_button.update(surface)
-        self.row_button.update(surface)
-        self.random_button.update(surface)
+        for btn_dict in self.buttons:
+            btn_dict["button"].update(surface)
 
 
 
