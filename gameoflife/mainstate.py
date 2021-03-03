@@ -106,18 +106,23 @@ class MainState:
             self.B.board[i][j].draw_state()
             self.last_cell_change = self.B.board[i][j]
 
+
+    def mouse_controls(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
+                self.click_change(pygame.mouse.get_pos())
+        if event.type == pygame.MOUSEMOTION:
+            if pygame.mouse.get_pressed()[0]:
+                self.motion_change(pygame.mouse.get_pos())
+
+
     def event_loop(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.run = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed()[0]:
-                    self.click_change(pygame.mouse.get_pos())
-            if event.type == pygame.MOUSEMOTION:
-                if pygame.mouse.get_pressed()[0]:
-                    self.motion_change(pygame.mouse.get_pos())
-
+            if not self.run_game:
+                self.mouse_controls(event)
             self.M.get_event(event)
 
 
