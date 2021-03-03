@@ -19,17 +19,13 @@ class Board:
 
 
 
+    def __repr__(self):
+        pass
+
     def print_board(self):
         for i in range(len(self.board)):
             print(self.board[i])
         print()
-
-
-    def random_state(self):
-        for row in range(len(self.board)):
-            for cell in self.board[row]:
-                cell.state = random.randint(0,1)
-                cell.prev_state = cell.state
 
 
     def set_cell_prev_state(self):
@@ -40,7 +36,6 @@ class Board:
                 cell.prev_state = cell.state
 
 
-
     def create_board(self):
         for i in range(self.width):
             row = []
@@ -48,6 +43,45 @@ class Board:
                 cell = Cell(x=i, y=j, state=0)
                 row.append(cell)
             self.board.append(row)
+
+
+    def load_state(self, filename):
+        path = os.path.dirname(os.path.abspath(__file__))
+
+        file_path = os.path.dirname(path) + '/States/'
+        cell_states = []
+        with open(file_path + filename, 'r') as f:
+            for line in f:
+                line = line.split(',')
+                if line:
+                    line = [int(i) for i in line]
+                    cell_states.append(line)
+
+        #APply loaded file states
+        start_cell_x = int((BOARD_WIDTH - len(cell_states[0])) //2)
+        start_cell_y = int((BOARD_HEIGHT - len(cell_states)) //2)
+        i = start_cell_x
+        j = start_cell_y
+        print(f"i {i}j {j}")
+        for row in cell_states:
+            for value in enumerate(row):
+                x = int(i + value[0])
+
+                print(f"value {value} j: {j} i: {x}")
+                print(self.board[j][i])
+                self.board[x][j].state = value[1]
+                self.board[x][j].prev_state = value[1]
+                print(self.board[j][i])
+            j += 1
+        # self.print_board()
+
+
+
+    def random_state(self, *args):
+        for row in range(len(self.board)):
+            for cell in self.board[row]:
+                cell.state = random.randint(0,1)
+                cell.prev_state = cell.state
 
 
     def dead_state(self):
