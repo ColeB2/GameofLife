@@ -56,6 +56,8 @@ class Board:
                 if line:
                     line = [int(i) for i in line]
                     cell_states.append(line)
+        ##Clear Board First
+        self.dead_state()
 
         #APply loaded file states
         start_cell_x = int((BOARD_WIDTH - len(cell_states[0])) //2)
