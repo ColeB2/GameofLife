@@ -16,5 +16,6 @@ if __name__ == "__main__":
     while game.run:
         surface.fill(BG_COLOR)
         game.main_loop(surface)
+
+        clock.tick(FPS)
         pygame.display.update()
-        clock.tick(60)
