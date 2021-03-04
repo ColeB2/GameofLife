@@ -48,6 +48,8 @@ class MainState:
               "function_args": None},
         ]
         self.create_buttons()
+        self.last_update = 0
+        self.update_time = 500
 
     def create_buttons(self):
         for button in self.button_info:
@@ -116,7 +118,19 @@ class MainState:
                 self.motion_change(pygame.mouse.get_pos())
 
 
+    def update_state(self, current_time):
+        """
+        The main board update timing method. Calls the board objects update
+        method after self.update_time time amount lapses.
+        """
+        if current_time - self.last_update > self.update_time:
+            self.B.next_state()
+            self.last_update = current_time
+
+
+
     def event_loop(self):
+        """The programs main event loop."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.run = False
@@ -127,15 +141,19 @@ class MainState:
 
 
     def update(self, surface):
+        """Programs main update method"""
+        surface.fill(BG_COLOR)
         self.B.update(surface)
         self.M.update(surface, generations=self.B.generation)
 
 
-    def main_loop(self, surface):
+    def main_loop(self, surface, current_time):
+        """Programs main loop. Calls the event loop and the update method as
+        well as other methods needed to make the program run."""
         self.event_loop()
         self.update(surface)
         if self.run_game:
-            self.B.next_state()
+            self.update_state(current_time)
 
 
 
@@ -145,9 +163,12 @@ if __name__ == "__main__":
     surface = pygame.display.set_mode((DIS_X, DIS_Y))
     surface.fill((BG_COLOR))
     pygame.display.set_caption("Conway's Game of Life mainstate")
+    clock = pygame.time.Clock()
 
     game = MainState()
     while game.run:
+        current_time = pygame.time.get_ticks()
+        time_delta = clock.tick(FPS)/1000.0
         surface.fill(BG_COLOR)
-        game.main_loop(surface)
+        game.main_loop(surface, current_time)
         pygame.display.update()

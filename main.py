@@ -14,8 +14,8 @@ if __name__ == "__main__":
 
     game = MainState()
     while game.run:
-        surface.fill(BG_COLOR)
-        game.main_loop(surface)
-
+        current_time = pygame.time.get_ticks()
         clock.tick(FPS)
+        surface.fill(BG_COLOR)
+        game.main_loop(surface, current_time)
         pygame.display.update()
