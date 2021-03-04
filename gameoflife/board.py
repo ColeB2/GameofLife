@@ -12,9 +12,8 @@ class Board:
     def __init__(self, width=10, height=10):
         self.width = width #row
         self.height = height #col
-        self.board = []
         self.generation = 0
-        self.create_board()
+        self._create_board()
         self.set_cell_neighbours()
 
 
@@ -36,7 +35,12 @@ class Board:
                 cell.prev_state = cell.state
 
 
-    def create_board(self):
+    def _create_board(self):
+        """
+        Internal method to be called upon init. Creates a 2d array/list and 
+        populates the list with Cell objects with a default state of 0/dead
+        """
+        self.board = []
         for i in range(self.width):
             row = []
             for j in range(self.height):
@@ -45,9 +49,15 @@ class Board:
             self.board.append(row)
 
 
-    def load_state(self, filename):
+    def _load_file(self, filename):
+        """
+        Returns a list of cell states. Does so by loading a file and
+        creating a list of states for the cells
+        params:
+            filename: str - name of the file for which to pull the information
+        from --> 'filename.txt'
+        """
         path = os.path.dirname(os.path.abspath(__file__))
-
         file_path = os.path.dirname(path) + '/States/'
         cell_states = []
         with open(file_path + filename, 'r') as f:
@@ -56,30 +66,46 @@ class Board:
                 if line:
                     line = [int(i) for i in line]
                     cell_states.append(line)
-        ##Clear Board First
-        self.dead_state()
+        return cell_states
 
-        #APply loaded file states
+
+    def _apply_state(self, cell_list):
+        """
+        Applys the state to the approrpiate cells in the board. Tries to
+        to center the state as well.
+        params:
+            cell_list: List of cells and their state value.
+        """
+        cell_states = cell_list
         start_cell_x = int((BOARD_WIDTH - len(cell_states[0])) //2)
         start_cell_y = int((BOARD_HEIGHT - len(cell_states)) //2)
         i = start_cell_x
         j = start_cell_y
-        print(f"i {i}j {j}")
         for row in cell_states:
             for value in enumerate(row):
                 x = int(i + value[0])
 
-                print(f"value {value} j: {j} i: {x}")
-                print(self.board[j][i])
                 self.board[x][j].state = value[1]
                 self.board[x][j].prev_state = value[1]
-                print(self.board[j][i])
             j += 1
-        # self.print_board()
+
+
+    def load_state(self, filename):
+        """
+        Clears the board by calling the dead_state method. Loads the state to
+        be applied via _load_file method and passes information on to the
+        _apply_state method to apply the given state to the board.
+        """
+        self.dead_state()
+        cell_states = self._load_file(filename)
+        self._apply_state(cell_states)
+        #APply loaded file states
 
 
 
     def random_state(self, *args):
+        """Creates a random state by looping through each cell and randomly
+        selecting a state for it to be in."""
         for row in range(len(self.board)):
             for cell in self.board[row]:
                 cell.state = random.randint(0,1)
@@ -88,7 +114,8 @@ class Board:
 
     def dead_state(self):
         """Kills all cells in the board, does so by iterating through all cells
-        and changing their state to 0."""
+        and changing their state and prev_state to 0 while also resetting the
+        generation counter."""
         for row in self.board:
             for cell in row:
                 cell.state = 0
@@ -118,12 +145,14 @@ class Board:
 
 
     def cell_update(self, surface, *args):
+        """Update method which calls each individual cells update methods."""
         for row in self.board:
             for cell in row:
                 cell.update(surface, *args)
 
 
     def update(self, surface):
+        """Update Function for the board"""
         self.cell_update(surface)
 
 
