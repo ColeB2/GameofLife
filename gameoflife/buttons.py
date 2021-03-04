@@ -57,6 +57,8 @@ class Button:
                    'hover_color': (255,51,51),
                    'font_color': (255,255,255),
                    'run_on_release': True,
+                   'is_toggle': False,
+                   'toggled': False,
                    }
 
         for kwarg in kwargs:
@@ -114,6 +116,8 @@ class Button:
         elif self.hovered and self.hover_color:
             color = self.hover_color
 
+        if self.is_toggle and self.toggled:
+            color = (255,51,51)
 
         pygame.draw.rect(surface, color, self.rect)
         if self.text:
