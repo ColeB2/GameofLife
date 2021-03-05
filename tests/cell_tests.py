@@ -1,0 +1,47 @@
+import unittest
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('.', 'gameoflife')))
+
+from cell import Cell
+
+class TestCell(unittest.TestCase):
+    @classmethod
+    def setUpClass(self):
+        self.C1 = Cell(0,0, state=0)
+        self.C2 = Cell(0,1, state=0)
+        self.C3 = Cell(1,0, state=0)
+        self.C4 = Cell(1,1, state=1)
+
+        self.Board = [[self.C1, self.C2],[self.C3, self.C4]]
+        self.C1.get_neighbours(self.Board)
+
+    def test_proper_setup(self):
+        self.assertEqual(self.C1.x, 0)
+        self.assertEqual(self.C1.y, 0)
+        self.assertEqual(self.C1.state, 0)
+
+    def test_get_neighbours(self):
+        Answer = [self.C3, self.C2, self.C4]
+        for i in range(len(self.C1.neighbours)):
+            self.assertEqual(self.C1.neighbours[i], Answer[i])
+
+
+    def test_check_neighbour_state(self):
+        self.C1.check_neighbour_state()
+        self.assertEqual(self.C1.alive_neighbours, 1)
+
+    def test_draw_state(self):
+        C=Cell(0,0,state=0)
+        self.assertEqual(C.state,0)
+        C.draw_state()
+        self.assertEqual(C.state,1)
+
+    def test_calculate_state(self):
+        self.C4.get_neighbours(self.Board)
+        self.assertEqual(self.C4.state, 1)
+        self.C4.calculate_state()
+        self.assertEqual(self.C4.state, 0)
+
+
+if __name__ == "__main__":
+    unittest.main()
