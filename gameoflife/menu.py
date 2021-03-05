@@ -22,21 +22,33 @@ class Menu:
 
 
     def render_static_text(self):
-        self.text = self.menu_font.render("Generations: ", True, BLACK, BG_COLOR)
+        self.generations_text = self.menu_font.render("Generations: ", True, BLACK, BG_COLOR)
+        self.delay_text = self.menu_font.render('Delay(ms): ', True, BLACK, BG_COLOR)
 
 
     def render_generations_text(self):
         self.gen_text = self.menu_font.render(str(self.generations), True, BLACK)
 
 
+    def render_delay_text(self):
+        self.delay_text_value = self.menu_font.render(str(self.delay), True, BLACK)
+
+
     def blit_text(self, surface):
-        surface.blit(self.text, (0,670))
+        surface.blit(self.generations_text, (0,670))
         surface.blit(self.gen_text, (220,670))
+        surface.blit(self.delay_text, (300,670))
+        surface.blit(self.delay_text_value,(480,670))
 
 
     def get_generations(self, generations):
         self.generations = generations
         self.render_generations_text()
+
+
+    def get_delay(self, delay):
+        self.delay = delay
+        self.render_delay_text()
 
 
 
@@ -49,6 +61,7 @@ class Menu:
         for btn_dict in self.buttons:
             btn_dict["button"].update(surface)
         self.get_generations(kwargs["generations"])
+        self.get_delay(kwargs["delay"])
         self.blit_text(surface)
 
 

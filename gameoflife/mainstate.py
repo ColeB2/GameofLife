@@ -46,6 +46,18 @@ class MainState:
               "text":"Random",
               "function": self.B.random_state,
               "function_args": None},
+             {"rect": (730,655,90,45),
+              "text": "0",
+              "function": self.set_delay,
+              "function_args": 0},
+             {"rect": (820,655,90,45),
+              "text": "250",
+              "function": self.set_delay,
+              "function_args":250 },
+             {"rect": (910,655,90,45),
+              "text": "500",
+              "function": self.set_delay,
+              "function_args":500}
         ]
         self.create_buttons()
         self.last_update = 0
@@ -71,6 +83,10 @@ class MainState:
 
     def reset_button_function(self, *args):
         self.B.dead_state()
+
+
+    def set_delay(self, *args):
+        self.update_time = args[0]
 
 
     def get_cell(self, pos):
@@ -144,7 +160,7 @@ class MainState:
         """Programs main update method"""
         surface.fill(BG_COLOR)
         self.B.update(surface)
-        self.M.update(surface, generations=self.B.generation)
+        self.M.update(surface, generations=self.B.generation, delay=self.update_time)
 
 
     def main_loop(self, surface, current_time):
