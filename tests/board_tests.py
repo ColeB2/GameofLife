@@ -101,6 +101,31 @@ class TestBoard(unittest.TestCase):
         self.assertEqual(self.B.generation, 1)
 
 
+    def test_load_file(self):
+        exploder = self.B._load_file("explodersmall.txt")
+        expected = [[0,1,0],
+                    [1,1,1],
+                    [1,0,1],
+                    [0,1,0]]
+        self.assertEqual(exploder, expected)
+
+
+    def test_load_state(self):
+        B = Board(3,4)
+        B.load_state("explodersmall.txt")
+
+        state=[]
+
+        for row in B.board:
+            for cell in row:
+                state.append(cell.state)
+
+        expected = [0,1,1,0,
+                    1,1,0,1,
+                    0,1,1,0]
+        self.assertEqual(state, expected)
+
+
 
 
 
