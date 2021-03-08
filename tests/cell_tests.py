@@ -28,9 +28,15 @@ class TestCell(unittest.TestCase):
         self.assertEqual(len(self.C1.neighbours), 3)
 
     def test_get_neighbours(self):
-        Answer = [self.C3, self.C2, self.C4]
+        cell_1_neighbours = [self.C3, self.C2, self.C4]
         for i in range(len(self.C1.neighbours)):
-            self.assertEqual(self.C1.neighbours[i], Answer[i])
+            self.assertEqual(self.C1.neighbours[i], cell_1_neighbours[i])
+        cell_2_neighbours = [self.C1, self.C3, self.C4]
+        for i in range(len(self.C2.neighbours)):
+            self.assertEqual(self.C2.neighbours[i], cell_2_neighbours[i])
+        cell_3_neighbours = [self.C1, self.C2, self.C4]
+        for i in range(len(self.C3.neighbours)):
+            self.assertEqual(self.C3.neighbours[i], cell_3_neighbours[i])
 
 
     def test_check_neighbour_state(self):
@@ -45,11 +51,20 @@ class TestCell(unittest.TestCase):
 
     def test_calculate_state(self):
         self.C4.get_neighbours(self.Board)
+
+        cell_4_neighbours = [self.C1, self.C3, self.C2]
+        for i in range(len(self.C4.neighbours)):
+            self.assertEqual(self.C4.neighbours[i], cell_4_neighbours[i])
         self.assertEqual(self.C4.state, 1)
+
         self.C4.check_neighbour_state()
         self.assertEqual(self.C4.alive_neighbours, 0)
+
         self.C4.calculate_state()
         self.assertEqual(self.C4.state, 0)
+
+
+
 
 
 if __name__ == "__main__":
