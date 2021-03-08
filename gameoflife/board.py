@@ -37,7 +37,7 @@ class Board:
 
     def _create_board(self):
         """
-        Internal method to be called upon init. Creates a 2d array/list and 
+        Internal method to be called upon init. Creates a 2d array/list and
         populates the list with Cell objects with a default state of 0/dead
         """
         self.board = []
@@ -77,8 +77,8 @@ class Board:
             cell_list: List of cells and their state value.
         """
         cell_states = cell_list
-        start_cell_x = int((BOARD_WIDTH - len(cell_states[0])) //2)
-        start_cell_y = int((BOARD_HEIGHT - len(cell_states)) //2)
+        start_cell_x = int((self.width - len(cell_states[0])) //2)
+        start_cell_y = int((self.height - len(cell_states)) //2)
         i = start_cell_x
         j = start_cell_y
         for row in cell_states:
