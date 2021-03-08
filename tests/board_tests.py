@@ -126,6 +126,20 @@ class TestBoard(unittest.TestCase):
         self.assertEqual(state, expected)
 
 
+    def test__apply_state(self):
+        B = Board(3,3)
+        states = [[1,1,1],[1,1,1],[1,1,1]]
+        B._apply_state(states)
+        test = False
+        for row in B.board:
+            for cell in row:
+                if cell.state == 0:
+                    test = True
+
+        self.assertEqual(test, False)
+
+
+
 
 
 
