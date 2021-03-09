@@ -38,21 +38,20 @@ class Cell:
         """
         Gets all neighbouring cells and adds them to the list of neighbours
         """
-        neighbour_check = True
         for j in neighbours:
             for i in neighbours:
-                neighbour_check = True
+                valid_neighbour = True
                 if i == 0 and j == 0:
                     # Can't be neighbours with self
-                    neighbour_check = False
+                    valid_neighbour = False
                 elif self.x + i < 0 or self.y + j < 0:
                     #Can't be neighbours with cells off the board/ other side
-                    neighbour_check = False
+                    valid_neighbour = False
                 elif self.x + i > len(neighbourhood[0])-1 or self.y + j > len(neighbourhood)-1:
                     #Can't neighbours with cells that don't exists/ off the board
-                    neighbour_check = False
+                    valid_neighbour = False
 
-                if neighbour_check:
+                if valid_neighbour:
                     self.neighbours.append(neighbourhood[self.y + j][self.x + i])
 
 
@@ -92,12 +91,10 @@ class Cell:
     def update(self, surface, *args):
         if self.state == 1:
             self.color = BLACK
-        elif self.state == 0:
+        else:
             self.color = GRAY
 
-
         pygame.draw.rect(surface, self.color, self.rect, width=0)
-
 
 
 
