@@ -30,8 +30,8 @@ class Board:
     def set_cell_prev_state(self):
         """Sets the all the cell's in the board prev_state attribute to be the
         value of all current state values."""
-        for row in range(len(self.board)):
-            for cell in self.board[row]:
+        for row in self.board:
+            for cell in row:
                 cell.prev_state = cell.state
 
 
@@ -40,13 +40,15 @@ class Board:
         Internal method to be called upon init. Creates a 2d array/list and
         populates the list with Cell objects with a default state of 0/dead
         """
-        self.board = []
-        for j in range(self.height):
-            row = []
-            for i in range(self.width):
-                cell = Cell(x=i, y=j, state=0)
-                row.append(cell)
-            self.board.append(row)
+        # self.board = []
+        # for j in range(self.height):
+        #     row = []
+        #     for i in range(self.width):
+        #         cell = Cell(x=i, y=j, state=0)
+        #         row.append(cell)
+        #     self.board.append(row)
+        self.board = [[Cell(x=i, y=j, state=0) for i in range(self.width)]\
+                                               for j in range(self.height) ]
 
 
     def _load_file(self, filename):
@@ -84,11 +86,11 @@ class Board:
         i = start_cell_x
         j = start_cell_y
         for row in cell_list:
-            for value in enumerate(row):
-                x = int(i + value[0])
+            for x_offset, state in enumerate(row):
+                x = int(i + x_offset)
 
-                self.board[j][x].state = value[1]
-                self.board[j][x].prev_state = value[1]
+                self.board[j][x].state = state
+                self.board[j][x].prev_state = state
             j += 1
 
 
@@ -101,15 +103,13 @@ class Board:
         self.dead_state()
         cell_states = self._load_file(filename)
         self._apply_state(cell_states)
-        #APply loaded file states
-
 
 
     def random_state(self, *args):
         """Creates a random state by looping through each cell and randomly
         selecting a state for it to be in."""
-        for row in range(len(self.board)):
-            for cell in self.board[row]:
+        for row in self.board:
+            for cell in row:
                 cell.state = random.randint(0,1)
                 cell.prev_state = cell.state
 
