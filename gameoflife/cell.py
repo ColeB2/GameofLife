@@ -48,12 +48,12 @@ class Cell:
                 elif self.x + i < 0 or self.y + j < 0:
                     #Can't be neighbours with cells off the board/ other side
                     neighbour_check = False
-                elif self.x + i > len(neighbourhood)-1 or self.y + j > len(neighbourhood[0])-1:
+                elif self.x + i > len(neighbourhood[0])-1 or self.y + j > len(neighbourhood)-1:
                     #Can't neighbours with cells that don't exists/ off the board
                     neighbour_check = False
 
                 if neighbour_check:
-                    self.neighbours.append(neighbourhood[self.x + i][self.y + j])
+                    self.neighbours.append(neighbourhood[self.y + j][self.x + i])
 
 
     def check_neighbour_state(self):
@@ -111,9 +111,9 @@ if __name__ == '__main__':
     """Create the Cells"""
 
     cells = []
-    for i in range(BOARD_WIDTH):
+    for j in range(BOARD_HEIGHT):
         row = []
-        for j in range(BOARD_HEIGHT):
+        for i in range(BOARD_WIDTH):
             row.append(Cell(i,j, state=0))
         cells.append(row)
 
@@ -135,16 +135,16 @@ if __name__ == '__main__':
         calling the change state method on said cell if called. """
         i, j = get_cell(pos)
         if collision_check(i,j):
-            cells[i][j].draw_state()
+            cells[j][i].draw_state()
 
     last_cell_change = None
     def motionChange(pos):
         global last_cell_change
         i, j = get_cell(pos)
         # print(f"i:{i}----j:{j}----pos:{pos}")
-        if collision_check(i,j) == True and last_cell_change != cells[i][j]:
-            cells[i][j].draw_state()
-            last_cell_change = cells[i][j]
+        if collision_check(i,j) == True and last_cell_change != cells[j][i]:
+            cells[j][i].draw_state()
+            last_cell_change = cells[j][i]
 
 
     print(cells)

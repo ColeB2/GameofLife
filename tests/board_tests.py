@@ -120,9 +120,10 @@ class TestBoard(unittest.TestCase):
             for cell in row:
                 state.append(cell.state)
 
-        expected = [0,1,1,0,
-                    1,1,0,1,
-                    0,1,1,0]
+        expected = [0,1,0,
+                    1,1,1,
+                    1,0,1,
+                    0,1,0]
         self.assertEqual(state, expected)
 
 

@@ -41,9 +41,9 @@ class Board:
         populates the list with Cell objects with a default state of 0/dead
         """
         self.board = []
-        for i in range(self.width):
+        for j in range(self.height):
             row = []
-            for j in range(self.height):
+            for i in range(self.width):
                 cell = Cell(x=i, y=j, state=0)
                 row.append(cell)
             self.board.append(row)
@@ -74,19 +74,21 @@ class Board:
         Applys the state to the approrpiate cells in the board. Tries to
         to center the state as well.
         params:
-            cell_list: List of cells and their state value.
+            cell_list: 2D list of cells and their state value
+                [[1,1,1],
+                 [1,0,1],
+                 [1,1,1]]
         """
-        cell_states = cell_list
-        start_cell_x = int((self.width - len(cell_states[0])) //2)
-        start_cell_y = int((self.height - len(cell_states)) //2)
+        start_cell_x = int((self.width - len(cell_list[0])) //2)
+        start_cell_y = int((self.height - len(cell_list)) //2)
         i = start_cell_x
         j = start_cell_y
-        for row in cell_states:
+        for row in cell_list:
             for value in enumerate(row):
                 x = int(i + value[0])
 
-                self.board[x][j].state = value[1]
-                self.board[x][j].prev_state = value[1]
+                self.board[j][x].state = value[1]
+                self.board[j][x].prev_state = value[1]
             j += 1
 
 
@@ -126,8 +128,8 @@ class Board:
     def set_cell_neighbours(self):
         """Iterates through all cells, and creates a list of neighbours
         for each cell."""
-        for row in range(len(self.board)):
-            for cell in self.board[row]:
+        for row in self.board:
+            for cell in row:
                 cell.get_neighbours(self.board)
 
 
@@ -137,8 +139,8 @@ class Board:
         iterating through all cells in the board, and calling their
         calculate_state methods
         """
-        for row in range(len(self.board)):
-            for cell in self.board[row]:
+        for row in self.board:
+            for cell in row:
                 cell.calculate_state()
         self.set_cell_prev_state()
         self.generation += 1
@@ -187,7 +189,7 @@ if __name__ == "__main__":
         return i, j
 
     def collision_check(i,j):
-        if i >=0 and i <= BOARD_WIDTH-1  and j >=0 and j <=BOARD_HEIGHT-1:
+        if i >=0 and i <= B.width-1  and j >=0 and j <= B.height-1:
             return True
         return False
 
@@ -198,15 +200,15 @@ if __name__ == "__main__":
         calling the change state method on said cell if called. """
         i, j = get_cell(pos)
         if collision_check(i,j):
-            B.board[i][j].draw_state()
+            B.board[j][i].draw_state()
 
     last_cell_change = None
     def motionChange(pos):
         global last_cell_change
         i, j = get_cell(pos)
-        if collision_check(i,j) == True and last_cell_change != B.board[i][j]:
-            B.board[i][j].draw_state()
-            last_cell_change = B.board[i][j]
+        if collision_check(i,j) == True and last_cell_change != B.board[j][i]:
+            B.board[j][i].draw_state()
+            last_cell_change = B.board[j][i]
 
     run = True
     """Main Loop"""
