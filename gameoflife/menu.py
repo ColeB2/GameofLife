@@ -11,9 +11,6 @@ class Menu:
         self.menu_font = pygame.font.SysFont(None, 50)
         self.render_static_text()
 
-        self.delay_text_bool = True
-        self.generation_text_bool = True
-
 
 
     def create_buttons(self, rect, button_text, function, function_args=None):
@@ -38,12 +35,10 @@ class Menu:
 
 
     def blit_text(self, surface):
-        if self.generation_text_bool:
-            surface.blit(self.generations_text, (0,670))
-            surface.blit(self.gen_text, (220,670))
-        if self.delay_text_bool:
-            surface.blit(self.delay_text, (300,670))
-            surface.blit(self.delay_text_value,(480,670))
+        surface.blit(self.generations_text, (0,670))
+        surface.blit(self.gen_text, (220,670))
+        surface.blit(self.delay_text, (300,670))
+        surface.blit(self.delay_text_value,(480,670))
 
 
     def get_generations(self, generations):
@@ -56,7 +51,6 @@ class Menu:
         self.render_delay_text()
 
 
-
     def get_event(self, event):
         for btn_dict in self.buttons:
             btn_dict["button"].get_event(event, btn_dict["function_args"])
@@ -65,14 +59,8 @@ class Menu:
     def update(self, surface, **kwargs):
         for btn_dict in self.buttons:
             btn_dict["button"].update(surface)
-        try:
-            self.get_generations(kwargs["generations"])
-        except KeyError as e:
-            self.generation_text_bool = False
-        try:
-            self.get_delay(kwargs["delay"])
-        except KeyError as e:
-            self.delay_text_bool = False
+        self.get_generations(kwargs["generations"])
+        self.get_delay(kwargs["delay"])
         self.blit_text(surface)
 
 
