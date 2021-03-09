@@ -111,7 +111,7 @@ class MainState:
         calling the draw_state method on said cell if called. """
         i, j = self.get_cell(pos)
         if self.boundary_check(i,j):
-            self.B.board[i][j].draw_state()
+            self.B.board[j][i].draw_state()
 
 
     def motion_change(self, pos):
@@ -120,9 +120,9 @@ class MainState:
         of all cells that come in contact with mouse pointer while click held
         down"""
         i, j = self.get_cell(pos)
-        if self.boundary_check(i,j) == True and self.last_cell_change != self.B.board[i][j]:
-            self.B.board[i][j].draw_state()
-            self.last_cell_change = self.B.board[i][j]
+        if self.boundary_check(i,j) == True and self.last_cell_change != self.B.board[j][i]:
+            self.B.board[j][i].draw_state()
+            self.last_cell_change = self.B.board[j][i]
 
 
     def mouse_controls(self, event):
