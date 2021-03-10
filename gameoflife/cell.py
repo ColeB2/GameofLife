@@ -11,17 +11,13 @@ class Cell:
     def __init__(self, x, y, state=0):
         self.x = x
         self.y = y
-        self.state = state
+        self.state = self.prev_state = state
 
-        self.prev_state = state
         self.rect = pygame.Rect(TOP_LEFT_X+self.x*CELL_WIDTH,
                                 TOP_LEFT_Y+self.y*CELL_WIDTH,
                                 CELL_WIDTH-2,
                                 CELL_WIDTH-2)
-
-
         self.neighbours = []
-        self.alive_neighbours = 0
 
 
 
@@ -64,42 +60,34 @@ class Cell:
 
 
     def draw_state(self):
-        """Used for drawing purposes"""
-        if self.state:
-            self.state = 0
-            self.prev_state = 0
-        else:
-            self.state = 1
-            self.prev_state = 1
-
+        """Used for drawing purposes, flips state from 1,0 depending on state"""
+        self.state=self.prev_state=0 if self.state else 1
 
     def calculate_state(self):
-        """Alive - Calc State"""
+        """
+        calculate_state - Used to calculate the state of of the cell. Does
+        so by checking state of all the neighbours, and once given the amount
+        of live neighbours in the area, uses given rules to calculate own state
+        """
         self.check_neighbour_state()
         if self.state:
-            if self.alive_neighbours in [2,3]:
-                self.state = 1
-            else:
-                self.state = 0
+            self.state = 1 if self.alive_neighbours in [2,3] else 0
         else:
-            if self.alive_neighbours == 3:
-                self.state = 1
-            else:
-                self.state = 0
+            self.state = 1 if self.alive_neighbours == 3 else 0
 
 
     def update(self, surface, *args):
-        if self.state:
-            self.color = BLACK
-        else:
-            self.color = GRAY
-
+        """cells main update method."""
+        self.color = BLACK if self.state else GRAY
         pygame.draw.rect(surface, self.color, self.rect, width=0)
 
 
 
 
+
+
 if __name__ == '__main__':
+    """Sandbox Testing"""
     pygame.init()
     surface = pygame.display.set_mode((DIS_X, DIS_Y))
     surface.fill((BG_COLOR))

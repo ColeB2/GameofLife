@@ -59,14 +59,17 @@ class Menu:
     def update(self, surface, **kwargs):
         for btn_dict in self.buttons:
             btn_dict["button"].update(surface)
-        self.get_generations(kwargs["generations"])
+        self.get_generations(kwargs["generations"]) 
         self.get_delay(kwargs["delay"])
         self.blit_text(surface)
 
 
 
 
+
+
 if __name__ == "__main__":
+    """Sandbox Testing"""
     pygame.init()
     surface = pygame.display.set_mode((DIS_X,DIS_Y))
     surface.fill((BG_COLOR))

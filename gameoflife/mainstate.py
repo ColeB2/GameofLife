@@ -11,8 +11,19 @@ class MainState:
 
         self.run = True
         self.run_game = False
+
         self.last_cell_change = None
+
         self.M = Menu()
+        self.initialize_buttons_parameters()
+        self.create_buttons()
+        self.last_update = 0
+        self.delay = 500
+
+
+
+    """Button Related Methods"""
+    def initialize_buttons_parameters(self):
         self.button_info = [
             {"rect":(0,0,90,45),
               "text":"Play",
@@ -24,7 +35,7 @@ class MainState:
               "function_args": None},
             {"rect":(180,0,90,45),
               "text":"Clear",
-              "function": self.reset_button_function,
+              "function": self.B.dead_state,
               "function_args": None},
             {"rect":(550,0,90,45),
               "text":"Exploder",
@@ -59,9 +70,7 @@ class MainState:
               "function": self.set_delay,
               "function_args":500}
         ]
-        self.create_buttons()
-        self.last_update = 0
-        self.update_time = 500
+
 
     def create_buttons(self):
         for button in self.button_info:
@@ -81,20 +90,16 @@ class MainState:
         self.run_game = False
 
 
-    def reset_button_function(self, *args):
-        self.B.dead_state()
-
-
     def set_delay(self, *args):
-        self.update_time = args[0]
+        self.delay = args[0]
 
 
+    """Mouse Control Related Methods"""
     def get_cell(self, pos):
         """Converts a mouse position x,y value into a Cell coordinate value and
         returns that value."""
-        i = (pos[0] - TOP_LEFT_X) // CELL_WIDTH
-        j = (pos[1] - TOP_LEFT_Y) // CELL_WIDTH
-        return i, j
+        return (pos[0] - TOP_LEFT_X) // CELL_WIDTH,\
+               (pos[1] - TOP_LEFT_Y) // CELL_WIDTH
 
 
     def boundary_check(self, i,j):
@@ -137,12 +142,11 @@ class MainState:
     def update_state(self, current_time):
         """
         The main board update timing method. Calls the board objects update
-        method after self.update_time time amount lapses.
+        method after self.delay time amount lapses.
         """
-        if current_time - self.last_update > self.update_time:
+        if current_time - self.last_update > self.delay:
             self.B.next_state()
             self.last_update = current_time
-
 
 
     def event_loop(self):
@@ -160,7 +164,7 @@ class MainState:
         """Programs main update method"""
         surface.fill(BG_COLOR)
         self.B.update(surface)
-        self.M.update(surface, generations=self.B.generation, delay=self.update_time)
+        self.M.update(surface, generations=self.B.generation, delay=self.delay)
 
 
     def main_loop(self, surface, current_time):
@@ -174,7 +178,10 @@ class MainState:
 
 
 
+
+
 if __name__ == "__main__":
+    """Sandbox Testing"""
     pygame.init()
     surface = pygame.display.set_mode((DIS_X, DIS_Y))
     surface.fill((BG_COLOR))

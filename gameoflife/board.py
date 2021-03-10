@@ -12,9 +12,11 @@ class Board:
     def __init__(self, width=10, height=10):
         self.width = width #row
         self.height = height #col
+
         self.generation = 0
+
         self._create_board()
-        self.set_cell_neighbours()
+        self._set_cell_neighbours()
 
 
 
@@ -71,16 +73,12 @@ class Board:
                  [1,0,1],
                  [1,1,1]]
         """
-        start_cell_x = int((self.width - len(cell_list[0])) //2)
-        start_cell_y = int((self.height - len(cell_list)) //2)
-        i = start_cell_x
-        j = start_cell_y
+        i = int((self.width - len(cell_list[0])) //2)
+        j = int((self.height - len(cell_list)) //2)
         for row in cell_list:
             for x_offset, state in enumerate(row):
                 x = int(i + x_offset)
-
-                self.board[j][x].state = state
-                self.board[j][x].prev_state = state
+                self.board[j][x].state = self.board[j][x].prev_state = state
             j += 1
 
 
@@ -100,24 +98,22 @@ class Board:
         selecting a state for it to be in."""
         for row in self.board:
             for cell in row:
-                cell.state = random.randint(0,1)
-                cell.prev_state = cell.state
+                cell.state = cell.prev_state = random.randint(0,1)
 
 
-    def dead_state(self):
+    def dead_state(self, *args):
         """Kills all cells in the board, does so by iterating through all cells
         and changing their state and prev_state to 0 while also resetting the
         generation counter."""
         for row in self.board:
             for cell in row:
-                cell.state = 0
-                cell.prev_state = 0
+                cell.state = cell.prev_state = 0
         self.generation = 0
 
 
-    def set_cell_neighbours(self):
-        """Iterates through all cells, and creates a list of neighbours
-        for each cell."""
+    def _set_cell_neighbours(self):
+        """Internal method, iterates through all cells, and creates a list of
+        neighbours for each cell."""
         for row in self.board:
             for cell in row:
                 cell.get_neighbours(self.board)
@@ -151,7 +147,10 @@ class Board:
 
 
 
+
+
 if __name__ == "__main__":
+    """Sandbox Testing"""
     from buttons import Button
     import pygame
     pygame.init()
