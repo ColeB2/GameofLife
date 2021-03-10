@@ -18,9 +18,6 @@ class Board:
 
 
 
-    def __repr__(self):
-        pass
-
     def print_board(self):
         for i in range(len(self.board)):
             print(self.board[i])
@@ -40,13 +37,6 @@ class Board:
         Internal method to be called upon init. Creates a 2d array/list and
         populates the list with Cell objects with a default state of 0/dead
         """
-        # self.board = []
-        # for j in range(self.height):
-        #     row = []
-        #     for i in range(self.width):
-        #         cell = Cell(x=i, y=j, state=0)
-        #         row.append(cell)
-        #     self.board.append(row)
         self.board = [[Cell(x=i, y=j, state=0) for i in range(self.width)]\
                                                for j in range(self.height) ]
 
