@@ -59,16 +59,16 @@ class Cell:
         """Checks the state of all neighbouring cells"""
         self.alive_neighbours = 0
         for cell in self.neighbours:
-            if cell.prev_state == 1:
+            if cell.prev_state:
                 self.alive_neighbours += 1
 
 
     def draw_state(self):
         """Used for drawing purposes"""
-        if self.state == 1:
+        if self.state:
             self.state = 0
             self.prev_state = 0
-        elif self.state == 0:
+        else:
             self.state = 1
             self.prev_state = 1
 
@@ -76,12 +76,12 @@ class Cell:
     def calculate_state(self):
         """Alive - Calc State"""
         self.check_neighbour_state()
-        if self.state == 1:
+        if self.state:
             if self.alive_neighbours in [2,3]:
                 self.state = 1
             else:
                 self.state = 0
-        elif self.state == 0:
+        else:
             if self.alive_neighbours == 3:
                 self.state = 1
             else:
@@ -89,7 +89,7 @@ class Cell:
 
 
     def update(self, surface, *args):
-        if self.state == 1:
+        if self.state:
             self.color = BLACK
         else:
             self.color = GRAY
